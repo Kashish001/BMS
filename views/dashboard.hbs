@@ -1,0 +1,54 @@
+{{#if users}}
+<table class="table table-bordered table-responsive-md table-striped text-center" style="margin-top: 20px; margin-bottom: 50px;">
+    <thead>
+        <tr>
+            <th class="text-center">#</th>
+            <th class="text-center">Name</th>
+            <th class="text-center">S/O</th>
+            <th class="text-center">Contact Number</th>
+            <th class="text-center">Care Off</th>
+            <th class="text-center">Village</th>
+            <th class="text-center">Date</th>
+            <th class="text-center">Amount</th>
+            <th class="text-center">Days</th>
+        </tr> 
+    </thead>
+    <tbody>
+        {{#each users}}
+        <tr class = "click_row" data-href="/getuserdata/{{id}}">
+            <td class="pt-3-half text-center">{{indexing @index}}</td>
+            <td class="pt-3-half text-center">{{Name}}</td>
+            <td class="pt-3-half text-center">{{sonOff}}</td>
+            <td class="pt-3-half text-center">{{Mobile}}</td>
+            {{#if careOff}}
+            <td class="text-center">{{careOff}}</td>
+            {{else}}
+            <td class="pt-3-half text-center">NA</td>
+            {{/if}}
+            <td class="pt-3-half text-center">{{Village}}</td>
+            <td class="pt-3-half text-center">{{Date}}</td>
+            <td class="pt-3-half text-center">{{getRem ../bills ../transactions id}}</td>
+            <td class="pt-3-half text-center">{{get Date}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{else}}
+<h2>No Users Found</h2>
+{{/if}}
+    <script>
+        $(".click_row").click(function() {
+        window.location = $(this).data("href");
+        });
+  var $rows = $('.click_row');
+        $('#search').keyup(function() {
+            var val = '^(?=.*\\b' + $.trim($(this).val()).split(/\s+/).join('\\b)(?=.*\\b') + ').*$',
+            reg = RegExp(val, 'i'),
+            text;
+            $rows.show().filter(function() {
+            text = $(this).text().replace(/\s+/g, ' ');
+            text = text.substring(0, text.length)
+            return !reg.test(text);
+            }).hide();
+        });
+    </script>

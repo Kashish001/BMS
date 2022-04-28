@@ -1,0 +1,233 @@
+<style>
+     .user_data {
+        width: 100%;
+        display: flex;
+        flex-flow: wrap;
+        align-items: center;
+    }
+    .ele {
+        display: flex;
+        align-items: baseline;
+        width: auto;
+        flex-wrap: wrap;
+    }
+    form {
+        position: relative;
+    }
+    #name, #sonOff, #mobile, #careOff, #date, #village {
+        width: 230px;
+        vertical-align: middle;
+        margin: 5px 20px 5px 0;
+        padding: 2px;
+        background-color: #fff;
+    }
+    label{
+        font-size: 15px;
+        color: black;
+        font-weight: bold;
+        margin: 5px 10px 5px 0px;
+    }
+    table{
+        margin-top: 30px;
+    }
+    .pt-3-half {
+        padding-top: 1.4rem;
+    }
+    .btn {
+        margin-bottom: 50px;
+        float: left;
+        margin-left: 10px;
+        margin-top: 20px;
+    }
+</style>
+<form action="/updateUser", method="post">
+    <div class="user_data">
+       {{#each userData}}
+       <div class="ele">
+        <label for="name" style="margin-left: 0px;">Name: </label>
+        <input type="text" name="Name" value="{{Name}}" id="name" required>
+        </div> 
+        <div class="ele">
+        <label for="sonOff">Father Name: </label>
+        <input type="text" name="sonOff" id="sonOff" value ="{{sonOff}}">
+        </div>
+        <div class="ele">
+        <label for="village">Village: </label>
+        <input type="text" name="Village" id="village" value="{{Village}}" required>
+        </div>
+        <div class="ele">
+        <label for="mobile">Mobile No: </label>
+        <input type="tel" name="Mobile" id="mobile" value="{{Mobile}}">
+        </div>
+        <div class="ele">
+        <label for="careOff" style="margin-left: 0px;">Care Off: </label>
+        <input type="text" name="careOff" id="careOff" value="{{careOff}}">
+        </div>
+        <div class="ele">
+        <label for="Date">Date: </label>
+        <input type="date" name="Date" id="date" value="{{Date}}">
+        </div>
+        <input type="hidden", name='bill' value="" class="bill">
+        <input type="hidden" name="transactions" class="transactions" value="">
+        <input type="hidden" name="id" value="{{id}}">
+       {{/each}}
+    </div>
+     <table class="table table-bordered table-responsive-md table-striped text-center">
+            <thead>
+                <tr>
+                <th class="text-center">Total</th>
+                <th class="text-center">Credited</th>
+                <th class="text-center">Remaining</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <td class="pt-3-half text-center">{{total}}</td>
+                <td class="pt-3-half success text-center">{{Credit}}</td>
+                <td class='pt-3-half amount text-center'>{{Remaining}}</td>
+                </tr>
+            </tbody>
+        </table>
+    <table class="table table-bordered table-responsive-md table-striped text-center bill_table">
+        <thead>
+          <tr>
+            <th class="text-center">S.No</th>
+            <th class="text-center">Item Name</th>
+            <th class="text-center">Quantity</th>
+            <th class="text-center">Price</th>
+            <th class="text-center">Amount</th>
+            <th class="text-center">Narration</th>
+          </tr>
+        </thead>
+        <tbody class="bill_tbody">
+            {{#if userBill}}
+            {{#each userBill}}
+            <tr>
+                <td class="pt-3-half text-center" class="sno">{{indexing @index}}</td>
+                <td class="pt-3-half text-center" contenteditable="true" class="item">{{Item}}</td>
+                <td class="pt-3-half text-center" contenteditable="true" class="quantity">{{Quantity}}</td>
+                <td class="pt-3-half text-center" contenteditable="true" class="price">{{Price}}</td>
+                <td class="pt-3-half text-center" class="amount">{{Total}}</td>
+                <td class="pt-3-half" contenteditable="true" class="narration">{{Narration}}</td>
+            </tr>
+            {{/each}}
+            {{else}}
+             <tr>
+                <td class="pt-3-half text-center" class="sno">1</td>
+                <td class="pt-3-half text-center" contenteditable="true" class="item"></td>
+                <td class="pt-3-half text-center" contenteditable="true" class="quantity"></td>
+                <td class="pt-3-half text-center" contenteditable="true" class="price"></td>
+                <td class="pt-3-half text-center" class="amount"></td>
+                <td class="pt-3-half" contenteditable="true" class="narration"></td>
+            </tr>
+            {{/if}}
+        </tbody>
+      </table>
+      <table class="table table-bordered table-responsive-md table-striped text-center transaction_table">
+            <thead>
+                <tr>
+                <th class="text-center">Date</th>
+                <th class="text-center">Credit</th>
+                <th class="text-center">Remaining</th>
+                </tr>
+            </thead>
+            <tbody class="transaction_tbody">
+                {{#if userTransactions}}
+                {{#each userTransactions}}
+                <tr>
+                <td class="pt-3-half text-center"><input type="date" value="{{Date}}" style="border: none; height: auto; width:auto;" id="trans_date"></td>
+                <td class="pt-3-half success text-center" contenteditable="true">{{Credit}}</td>
+                <td class='pt-3-half amount text-center' contenteditable="true">{{Remaning}}</td>
+                </tr>
+                {{/each}}
+                {{else}}
+                <tr>
+                <td class="pt-3-half text-center"><input type="date" value="{{date}}" style="border: none; height: auto; width:auto;" id="trans_date"></td>
+                <td class="pt-3-half success text-center" contenteditable="true"></td>
+                <td class='pt-3-half amount text-center' contenteditable="true"></td>
+                </tr>
+                {{/if}}
+            </tbody>
+        </table>
+      <input type="submit" value="Save" class="btn btn-lg">
+</form>
+<script>
+    var total = 0, remaining = 0
+    $('.bill_table').on('keydown', 'td', (e)=> {
+        var keyCode = e.keyCode;
+        var $this = $(this),
+        $lastTr = $('tr:last', $('.bill_table')),
+        $lastTd = $('td:last', $lastTr);
+        if (keyCode == 9 && ($(e.target).closest('td')).is($lastTd)) {
+            let serialNum = $('td:first', $lastTr).text();
+            $lastTr.after(`<tr>
+                <td class="pt-3-half text-center" class="sno"></td>
+                <td class="pt-3-half text-center" contenteditable="true" class="item" name="Item"></td>
+                <td class="pt-3-half text-center" contenteditable="true" class="quantity" name="Quantity"></td>
+                <td class="pt-3-half text-center" contenteditable="true" class="price" name="Price"></td>
+                <td class="pt-3-half text-center" class="amount" name="Total"></td>
+                <td class="pt-3-half" contenteditable="true" class="narration" name="Narration"></td>
+            </tr>`);
+            $('.bill_table tr:last td:first').html(parseInt(serialNum) + 1);
+        }
+        $('td:not(.sno, .item, .narration)').on('change, keyup', function () {
+            var $row = $(this).closest('tr')
+            var quant = parseFloat($('td:eq(2)', $row).text())
+            var price = parseFloat($('td:eq(3)', $row).text())
+            $('td:eq(4)', $row).text(quant * price)
+        });
+    });
+
+    $('.transaction_table').on('keydown', 'td', (e)=> {
+        var keyCode = e.keyCode;
+        var $this = $(this),
+        $lastTr = $('tr:last', $('.transaction_table')),
+        $lastTd = $('td:last', $lastTr);
+        if (keyCode === 9 && ($(e.target).closest('td')).is($lastTd)) {
+            $lastTr.after(`<tr>
+                <td class="pt-3-half text-center date"><input type="date" value="{{date}}" style="border: none; height: auto; width:auto;"></td>
+                <td class="pt-3-half success text-center" contenteditable="true">{{credit}}</td>
+                <td class='pt-3-half amount text-center' contenteditable="true">{{Remaining}}</td>
+                </tr>`);
+        }
+        $('td').on('change, keyup', function () {
+            total = 0;
+            $('.bill_tbody > tr').each((index, tr) => {
+                if($('td:eq(4)', tr).text() == 'NaN' || $('td:eq(4)', tr).text() == '') {
+                    return;
+                }
+                total += parseFloat($('td:eq(4)', tr).text())
+            });
+            remaining = total
+            $('.transaction_tbody > tr').each((index, tr) => {
+                remaining -= parseFloat($('td:eq(1)', tr).text())
+            })
+            var $row = $(this).closest('tr')
+            $('td:eq(2)', $row).text(remaining)
+        });
+    });
+
+    var bills = ""
+    var transacs = ""
+    $('.btn').on('click', (e) => {
+        $('.bill_tbody > tr').each((index, tr) => {
+            if($('td:eq(4)', tr).text() == 'NaN' || $('td:eq(1)', tr).text() == '' || 
+                $('td:eq(2)', tr).text() == '' || $('td:eq(3)', tr).text() == '') {
+                tr.remove();
+                return;
+            }
+            var bill = `{${$('td:eq(1)', tr).text()},${$('td:eq(2)', tr).text()},${$('td:eq(3)', tr).text()},${$('td:eq(4)', tr).text()},${$('td:eq(5)', tr).text()}}`
+            bills += bill + "~";
+        });
+         $('.transaction_tbody > tr').each((index, tr) => {
+            if($('td:eq(2)', tr).text() == 'NaN' || $('td:eq(2)', tr).text() == '' || $('td:eq(1)', tr).text() == '') {
+                tr.remove();
+                return;
+            }
+            var trans = `{${$('td:eq(0) input', tr).val()},${$('td:eq(1)', tr).text()},${$('td:eq(2)', tr).text()}}`
+            transacs += trans + "~";
+        });
+        $('.bill').val(bills);
+        $('.transactions').val(transacs);
+    });
+</script>

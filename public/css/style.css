@@ -1,0 +1,9 @@
+.home:hover {
+    background-color: #ff9900;
+    font-weight: bolder;
+    color: whitesmoke;
+}
+.home {
+    margin-right: 40px;
+    background-color: darkorange;
+}
