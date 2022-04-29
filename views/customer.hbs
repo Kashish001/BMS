@@ -172,8 +172,8 @@
         }
         $('td:not(.sno, .item, .narration)').on('change, keyup', function () {
             var $row = $(this).closest('tr')
-            var quant = parseFloat($('td:eq(2)', $row).text())
-            var price = parseFloat($('td:eq(3)', $row).text())
+            var quant = prseInt($('td:eq(2)', $row).text())
+            var price = prseInt($('td:eq(3)', $row).text())
             $('td:eq(4)', $row).text(quant * price)
         });
     });
@@ -190,20 +190,19 @@
                 <td class='pt-3-half amount text-center' contenteditable="true">{{Remaining}}</td>
                 </tr>`);
         }
-        $('td').on('change, keyup', function () {
+        $('.transaction_tbody td').on('change, keyup', function () {
             total = 0;
             $('.bill_tbody > tr').each((index, tr) => {
                 if($('td:eq(4)', tr).text() == 'NaN' || $('td:eq(4)', tr).text() == '') {
                     return;
                 }
-                total += parseFloat($('td:eq(4)', tr).text())
+                total += prseInt($('td:eq(4)', tr).text())
             });
             remaining = total
             $('.transaction_tbody > tr').each((index, tr) => {
-                remaining -= parseFloat($('td:eq(1)', tr).text())
+                remaining -= prseInt($('td:eq(1)', tr).text());
+                $('td:eq(2)', tr).text(remaining)
             })
-            var $row = $(this).closest('tr')
-            $('td:eq(2)', $row).text(remaining)
         });
     });
 
