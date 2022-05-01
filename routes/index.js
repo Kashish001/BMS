@@ -83,7 +83,6 @@ router.post('/adduser', (req, res) => {
                 if(error)
                     res.render('error/500', {error: error})
                 const trans = req.body.transactions.split("~");
-                console.log(req.body.transactions)
                 var transes = []
                 for(let tran of trans) {
                     tran = tran.substring(1, tran.length - 1);
