@@ -129,6 +129,7 @@
                 <th class="text-center">Date</th>
                 <th class="text-center">Credit</th>
                 <th class="text-center">Remaining</th>
+                <th class="text-center">Narration</th>
                 </tr>
             </thead>
             <tbody class="transaction_tbody">
@@ -138,12 +139,14 @@
                 <td class="pt-3-half text-center"><input type="date" value="{{Date}}" style="border: none; height: auto; width:auto;" id="trans_date"></td>
                 <td class="pt-3-half success text-center" contenteditable="true">{{Credit}}</td>
                 <td class='pt-3-half amount text-center' contenteditable="true">{{Remaning}}</td>
+                <td class='pt-3-half amount text-center' contenteditable="true">{{Narration}}</td>
                 </tr>
                 {{/each}}
                 {{else}}
                 <tr>
                 <td class="pt-3-half text-center"><input type="date" value="{{date}}" style="border: none; height: auto; width:auto;" id="trans_date"></td>
                 <td class="pt-3-half success text-center" contenteditable="true"></td>
+                <td class='pt-3-half amount text-center' contenteditable="true"></td>
                 <td class='pt-3-half amount text-center' contenteditable="true"></td>
                 </tr>
                 {{/if}}
@@ -172,8 +175,8 @@
         }
         $('td:not(.sno, .item, .narration)').on('change, keyup', function () {
             var $row = $(this).closest('tr')
-            var quant = prseInt($('td:eq(2)', $row).text())
-            var price = prseInt($('td:eq(3)', $row).text())
+            var quant = parseInt($('td:eq(2)', $row).text())
+            var price = parseInt($('td:eq(3)', $row).text())
             $('td:eq(4)', $row).text(quant * price)
         });
     });
@@ -188,19 +191,24 @@
                 <td class="pt-3-half text-center date"><input type="date" value="{{date}}" style="border: none; height: auto; width:auto;"></td>
                 <td class="pt-3-half success text-center" contenteditable="true">{{credit}}</td>
                 <td class='pt-3-half amount text-center' contenteditable="true">{{Remaining}}</td>
+                <td class='pt-3-half narration text-center' contenteditable="true">{{Narration}}</td>
                 </tr>`);
         }
         $('.transaction_tbody td').on('change, keyup', function () {
             total = 0;
             $('.bill_tbody > tr').each((index, tr) => {
                 if($('td:eq(4)', tr).text() == 'NaN' || $('td:eq(4)', tr).text() == '') {
+                    if($('td:eq(0)', tr).text() == '1') {
+                        return;
+                    }
+                    tr.remove();
                     return;
                 }
-                total += prseInt($('td:eq(4)', tr).text())
+                total += parseInt($('td:eq(4)', tr).text())
             });
             remaining = total
             $('.transaction_tbody > tr').each((index, tr) => {
-                remaining -= prseInt($('td:eq(1)', tr).text());
+                remaining -= parseInt($('td:eq(1)', tr).text())
                 $('td:eq(2)', tr).text(remaining)
             })
         });
@@ -223,7 +231,7 @@
                 tr.remove();
                 return;
             }
-            var trans = `{${$('td:eq(0) input', tr).val()},${$('td:eq(1)', tr).text()},${$('td:eq(2)', tr).text()}}`
+            var trans = `{${$('td:eq(0) input', tr).val()},${$('td:eq(1)', tr).text()},${$('td:eq(2)', tr).text()},${$('td:eq(3)', tr).text()}}`
             transacs += trans + "~";
         });
         $('.bill').val(bills);

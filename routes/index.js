@@ -83,6 +83,7 @@ router.post('/adduser', (req, res) => {
                 if(error)
                     res.render('error/500', {error: error})
                 const trans = req.body.transactions.split("~");
+                console.log(req.body.transactions)
                 var transes = []
                 for(let tran of trans) {
                     tran = tran.substring(1, tran.length - 1);
@@ -97,7 +98,7 @@ router.post('/adduser', (req, res) => {
                     res.redirect('/addUser')
                     return;
                 }
-                pool.query(`insert into BMS.transactions(Date, Credit, Remaning, id) values ?;`, [transes], 
+                pool.query(`insert into BMS.transactions(Date, Credit, Remaning, Narration, id) values ?;`, [transes], 
                 (error, trans_data) => {
                     if(error)
                         res.render('error/500', {error: error})
@@ -162,7 +163,7 @@ router.post('/updateUser', (req, res) => {
                             res.redirect(`/getuserdata/${id}`);
                             return;
                         }
-                        pool.query(`insert into BMS.transactions(Date, Credit, Remaning, id) values ?;`, [transes], 
+                        pool.query(`insert into BMS.transactions(Date, Credit, Remaning, Narration, id) values ?;`, [transes], 
                         (error, trans_data) => {
                             if(error)
                                 res.render('error/500', {error: error})
